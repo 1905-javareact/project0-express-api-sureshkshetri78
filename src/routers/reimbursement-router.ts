@@ -1,17 +1,16 @@
 import express from 'express'
-
-// import { reimbursements } from '../state';
 import { authorization } from '../middleware/auth.middleware';
-// import { Reimbursement } from '../models/reimbursement';
 import { findReimbursementByStatusService, findReimbursementByUserService, 
-    submitReimbursementService, updateReimbursementService } from '../service/utl/reimbursements.service';
-
-
+    submitReimbursementService, updateReimbursementService, getAllReimbursementsService } from '../service/utl/reimbursements.service';
 export const reimbursementsRouter = express.Router()
 
 
+//Find all Reimbursements
+reimbursementsRouter.get('/status',[authorization(['finance-manager', 'admin']), async (req, res)=>{
+    res.json(await getAllReimbursementsService())
+}])
 //Find Reimbursements By Status
-reimbursementsRouter.get('/status/:statusid',[authorization(['finance-manager']), async (req, res)=>{
+reimbursementsRouter.get('/status/:statusid',[authorization(['finance-manager', 'admin']), async (req, res)=>{
 
     
     let id = +req.params.statusid//id is string by default, adding the + turns to int
@@ -54,15 +53,15 @@ if(isNaN(id)){
 
 
 //Update Reimbursement
-reimbursementsRouter.patch('/:id', [authorization(['finance-manager']), async (req, res) =>{
- 
-const { reimbursementid, author, amount, 
+reimbursementsRouter.patch('/modify/:id', [authorization(['finance-manager']), async (req, res) =>{
+ let reimbursement_id = +req.params.id
+const { author, amount, 
     date_submitted, date_resolved, description, resolver, status, type } = req.body
 
-if(isNaN(reimbursementid)){
+if(isNaN(reimbursement_id)){
     res.sendStatus(400)
 }else{
-    let reimbursement:any = await updateReimbursementService(reimbursementid, author, amount, 
+    let reimbursement:any = await updateReimbursementService(reimbursement_id, author, amount, 
         date_submitted, date_resolved, description, resolver, status, type)
 if(reimbursement){
     let {body} = req
@@ -81,15 +80,15 @@ if(reimbursement){
 
 }])
 
-
+//Submit reimbursement
 
 reimbursementsRouter.post('', async (req, res)=>{
     let {body} = req //destructuring
     let checks = {
         author: '',
         amount: '',
-        datesubmitted: '' ,
-        dateresolved: '' ,
+        date_submitted: '' ,
+        date_resolved: '' ,
         description: '' ,
         resolver: '',
         status: '',

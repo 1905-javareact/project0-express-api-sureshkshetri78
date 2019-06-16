@@ -1,9 +1,11 @@
-import { findReimbursementByStatus, findReimbursementByUser, submitReimbursement, updateReimbursement } from "../../dao/reimbursement.dao";
+import { findReimbursementByStatus, findReimbursementByUser, submitReimbursement, updateReimbursement, getAllReimbursements } from "../../dao/reimbursement.dao";
 // import { Request } from "express-serve-static-core";
 
 
 
-
+export async function getAllReimbursementsService(){
+    return await getAllReimbursements()
+}
 
 
 //Find Reimbursements By Status/statusId
@@ -24,8 +26,8 @@ export async function submitReimbursementService(body:any){
 
 
 //Update Reimbursement
-export async function updateReimbursementService(reimbursementid:number, author: number, amount: number, 
-    dateSubmitted: number, dateResolved: number, description: string, resolver: number, status: number, type: number){
-    return await updateReimbursement(reimbursementid, author, amount, dateSubmitted, dateResolved, 
+export async function updateReimbursementService(reimbursement_id:number, author: number, amount: number, 
+    date_submitted: number, date_resolved: number, description: string, resolver: number, status: number, type: number){
+    return await updateReimbursement(reimbursement_id, author, amount, date_submitted, date_resolved, 
                                      description, resolver, status, type)
 }

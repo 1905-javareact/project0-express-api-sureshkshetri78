@@ -1,21 +1,21 @@
 export class Reimbursement {
 
-    reimbursementid: number // primary key
+    reimbursement_id: number // primary key
 	author: number  // foreign key -> User, not null
 	amount: number  // not null
     date_submitted: number // not null
     date_resolved: number // not null
     description: string // not null
     resolver: number // foreign key -> User
-    status: number // foreign key -> ReimbursementStatus, not null
-    type: number // foreign key -> ReimbursementType
+    status: string // foreign key -> ReimbursementStatus, not null
+    type: string // foreign key -> ReimbursementType
 
 
 
-    constructor(reimbursementid: number, author: number, amount: number,
+    constructor(reimbursement_id: number, author: number, amount: number,
                 date_submitted: number, date_resolved: number, description: string = '',
-                resolver: number,  status: number,  type: number){
-      this.reimbursementid = reimbursementid;
+                resolver: number,  status: string,  type: string){
+      this.reimbursement_id = reimbursement_id;
       this.author = author;
       this.amount = amount;
       this.date_submitted = date_submitted;

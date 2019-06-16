@@ -1,15 +1,13 @@
 import express from 'express'
-// import { users } from '../state';
 import { authorization } from '../middleware/auth.middleware';
 import { getAllUsersService, findUserByIdService, findUserByUsernameAndPasswordService,updateUserService } from '../service/utl/users.service';
 
 
 export const userRouter = express.Router()
-
-userRouter.get('',[authorization(['finance-manager']),async (req, res)=>{
+//find all users
+userRouter.get('',[authorization(['finance-manager','admin']),async (req, res)=>{
     res.json(await getAllUsersService())
 }])
-    
     
     //Find Users By Id
 userRouter.get('/:id', [authorization(['finance-manager','employee']), async (req, res)=>{
@@ -35,6 +33,7 @@ userRouter.post('/login', async (req, res)=>{
     // const user = users.find(u => u.username === username && u.password === password)
     let user = await findUserByUsernameAndPasswordService(req, username, password)    
     if(typeof(user) === 'string'){
+        console.log('loginn user::::::')
         res.sendStatus(401)
     } else{
         res.send(JSON.stringify(user))// don't send them the session
@@ -46,15 +45,15 @@ userRouter.post('/login', async (req, res)=>{
 
 //updating user
 
-userRouter.patch('/:id', [authorization(['admin']), async(req, res)=>{
-    let userid = +req.params.id
+userRouter.patch('/modify/:id', [authorization(['admin']), async(req, res)=>{
+    let user_id = +req.params.id
     const { username, password, 
             first_name, last_name, email, role} = req.body
     
-    if(isNaN(userid)){
+    if(isNaN(user_id)){
         res.sendStatus(400)
     }else{
-        let user:any = await updateUserService(userid, username, password, 
+        let user:any = await updateUserService(user_id, username, password, 
             first_name, last_name, email, role)
     if(user){
         let {body} = req

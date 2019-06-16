@@ -4,6 +4,6 @@ export class Role {
 
     constructor(role_id: number, role: string[]){
        this.role_id = role_id;
-       this.role = role||[];
+       this.role = role;
     }
 }
